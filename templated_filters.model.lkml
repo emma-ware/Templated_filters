@@ -11,20 +11,20 @@ view: fruit_table {
   derived_table: {
     persist_for: "1 hour"
     sql:
-    select 'apple' as category, 1.2 as price, 15 as quantity, timestamp '2017-01-01' as stock_date union all
-    select 'pear' as category, 1.5 as price, 10 as quantity, timestamp '2017-01-01' as stock_date union all
-    select 'peach' as category, 1.0 as price, 5 as quantity, timestamp '2017-01-01' as stock_date union all
-    select 'blueberries' as category, 2.75  as price, 2 as quantity, timestamp '2017-01-01' as stock_date union all
-    select 'plum' as category, 0.9 as price, 7 as quantity, timestamp '2017-01-01' as stock_date union all
-    select 'banana' as category, 0.3 as price, 4 as quantity, timestamp '2017-01-01' as stock_date union all
-    select 'strawberries' as category, 3.10 as price, 3 as quantity, timestamp '2017-01-01' as stock_date union all
-    select 'apple' as category, 1.3 as price, 15 as quantity,  timestamp '2017-02-01' as stock_date union all
-    select 'pear' as category, 1.2 as price, 10 as quantity, timestamp '2017-02-01' as stock_date union all
-    select 'peach' as category, 1.1 as price, 5 as quantity, timestamp '2017-02-01' as stock_date union all
-    select 'blueberries' as category, 2.56  as price, 2 as quantity, timestamp '2017-02-01' as stock_date union all
-    select 'plum' as category, 0.7 as price, 7 as quantity,  timestamp '2017-02-01' as stock_date union all
-    select 'banana' as category, 0.25 as price, 4 as quantity, timestamp '2017-02-01' as stock_date union all
-    select 'strawberries' as category, 3.05 as price, 3 as quantity, timestamp '2017-02-01' as stock_date
+    (select 'apple' as category, 1.2 as price, 15 as quantity, timestamp('2017-01-01') as stock_date) union all
+    (select 'pear' as category, 1.5 as price, 10 as quantity, timestamp('2017-01-01') as stock_date) union all
+    (select 'peach' as category, 1.0 as price, 5 as quantity, timestamp('2017-01-01') as stock_date) union all
+    (select 'blueberries' as category, 2.75 as price, 2 as quantity, timestamp('2017-01-01') as stock_date) union all
+    (select 'plum' as category, 0.9 as price, 7 as quantity, timestamp('2017-01-01') as stock_date) union all
+    (select 'banana' as category, 0.3 as price, 4 as quantity, timestamp('2017-01-01') as stock_date) union all
+    (select 'strawberries' as category, 3.10 as price, 3 as quantity, timestamp('2017-01-01') as stock_date) union all
+    (select 'apple' as category, 1.3 as price, 15 as quantity,  timestamp('2017-02-01') as stock_date) union all
+    (select 'pear' as category, 1.2 as price, 10 as quantity, timestamp('2017-02-01') as stock_date) union all
+    (select 'peach' as category, 1.1 as price, 5 as quantity, timestamp('2017-02-01') as stock_date) union all
+    (select 'blueberries' as category, 2.56  as price, 2 as quantity, timestamp('2017-02-01') as stock_date) union all
+    (select 'plum' as category, 0.7 as price, 7 as quantity,  timestamp('2017-02-01') as stock_date) union all
+    (select 'banana' as category, 0.25 as price, 4 as quantity, timestamp('2017-02-01') as stock_date)
+
     ;;
   }
 
