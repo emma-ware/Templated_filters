@@ -5,7 +5,7 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 
 
 explore: fruit_table {
-  hidden: yes
+  hidden: no
 }
 view: fruit_table {
   derived_table: {
