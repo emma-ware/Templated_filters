@@ -41,7 +41,9 @@ view: fruit_table {
     ;;
   }
   filter: fruit_filter {
+    suggestions: ["apple", "pear", "peach","blueberries","plum","banana","starberries"]
     type: string
+
 
   }
   dimension: stock_date {
@@ -52,6 +54,14 @@ view: fruit_table {
   dimension: category {
     type: string
   }
+
+  measure: percentile_50 {
+    type: percentile
+    percentile: 50
+    sql: ${TABLE}.price ;;
+  }
+
+
   measure: avg_price {
     type: average
     sql: ${TABLE}.price ;;
@@ -108,6 +118,8 @@ view: templated_filter_ex {
           end ;;
 
     }
+
+
 
 
 
