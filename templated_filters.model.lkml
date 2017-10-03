@@ -10,6 +10,7 @@ explore: fruit_table {
 view: fruit_table {
   derived_table: {
     persist_for: "1 hour"
+    indexes: ["category"]
     sql:
     (select 'apple' as category, 1.2 as price, 15 as quantity, timestamp('2017-01-01') as stock_date) union all
     (select 'pear' as category, 1.5 as price, 10 as quantity, timestamp('2017-01-01') as stock_date) union all
@@ -27,7 +28,6 @@ view: fruit_table {
 
     ;;
   }
-
 
 
 
@@ -73,6 +73,7 @@ view: fruit_table {
 explore: templated_filter_ex  {
   hidden: yes
   join: fruit_table {
+    relationship: many_to_one
     sql_on: ${fruit_table.stock_date}=${templated_filter_ex.stock_check_date} and ${fruit_table.category}=${templated_filter_ex.category} ;;
   }
 }
