@@ -4,6 +4,8 @@ include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 
 
+explore: cross_project_view {}
+
 explore: fruit_table {
   hidden: no
 }
@@ -30,8 +32,7 @@ view: fruit_table {
   }
 
 
-
-  dimension: comparator {
+  dimension: type_of_fruit {
     type: string
     sql:
     case when {% condition fruit_filter %} ${category} {% endcondition %}
@@ -43,9 +44,9 @@ view: fruit_table {
   filter: fruit_filter {
     suggestions: ["apple", "pear", "peach","blueberries","plum","banana","starberries"]
     type: string
-
-
   }
+
+
   dimension: stock_date {
     type: date
     allow_fill: no
@@ -70,64 +71,106 @@ view: fruit_table {
 }
 
 
-explore: templated_filter_ex  {
-  hidden: yes
-  join: fruit_table {
-    relationship: many_to_one
-    sql_on: ${fruit_table.stock_date}=${templated_filter_ex.stock_check_date} and ${fruit_table.category}=${templated_filter_ex.category} ;;
-  }
-}
-view: templated_filter_ex {
+# explore: templated_filter_ex  {
+#   hidden: yes
+#   join: fruit_table {
+#     relationship: many_to_one
+#     sql_on: ${fruit_table.stock_date}=${templated_filter_ex.stock_check_date} and ${fruit_table.category}=${templated_filter_ex.category} ;;
+#   }
+# }
+# view: templated_filter_ex {
+#   derived_table: {
+#     sql:
+#       select
+#       category,
+#       row_number() over (partition by stock_date order by price * quantity desc) rank_stock_price,
+#       price*quantity stock_price,
+#       stock_date as stock_check_date
+#
+#       from ${fruit_table.SQL_TABLE_NAME} as fruit
+#       where {% condition fruit_table.fruit_filter %} category {% endcondition %}
+#        and {% condition date_filter %} ${stock_check_date} {% endcondition %}
+#
+#           ;;
+#   }
+#
+#
+#   dimension: category{}
+#   dimension: stock_check_date {
+#     type: date
+#     allow_fill: no
+#     convert_tz: no
+#   }
+#   filter: date_filter {
+#     type: date
+#     convert_tz: no
+#   }
+#   dimension: rank_stock_price {
+#     type: number
+#   }
+#   dimension: stock_price {
+#     type: number
+#     value_format_name: usd
+#   }
+#   dimension: is_berry {
+#     type: string
+#     sql: case when {% condition fruit_table.fruit_filter %} ${category} {% endcondition %} in ('strawberries', 'blueberries')
+#           then 'berry'
+#           else 'not berry'
+#           end ;;
+#
+#     }
+#
+#
+#
+#     measure: count {}
+#     measure: avg_stock_price {
+#       type: average
+#       sql: ${stock_price} ;;
+#     }
+#
+#   }
+
+explore: two_cols {}
+
+view: two_cols {
   derived_table: {
     sql:
-      select
-      category,
-      row_number() over (partition by stock_date order by price * quantity desc) rank_stock_price,
-      price*quantity stock_price,
-      stock_date as stock_check_date
-
-      from ${fruit_table.SQL_TABLE_NAME} as fruit
-      where {% condition fruit_table.fruit_filter %} category {% endcondition %}
-       and {% condition date_filter %} ${stock_check_date} {% endcondition %}
-
+      (select 'new1' as new_upc, 'old1' as old_upc) UNION all
+      (select 'new2' as new_upc, 'old2' as old_upc) UNION all
+      (select 'new3' as new_upc, 'old3' as old_upc)
           ;;
   }
 
 
-  dimension: category{}
-  dimension: stock_check_date {
-    type: date
-    allow_fill: no
-    convert_tz: no
-  }
-  filter: date_filter {
-    type: date
-    convert_tz: no
-  }
-  dimension: rank_stock_price {
-    type: number
-  }
-  dimension: stock_price {
-    type: number
-    value_format_name: usd
-  }
-  dimension: is_berry {
+  dimension: new_upc{
     type: string
-    sql: case when {% condition fruit_table.fruit_filter %} ${category} {% endcondition %} in ('strawberries', 'blueberries')
-          then 'berry'
-          else 'not berry'
-          end ;;
-
-    }
-
-
-
-
-
-    measure: count {}
-    measure: avg_stock_price {
-      type: average
-      sql: ${stock_price} ;;
-    }
-
+    sql: ${TABLE}.new_upc ;;
   }
+
+  dimension: old_upc{
+    type: string
+    sql: ${TABLE}.old_upc ;;
+  }
+
+  dimension: upc {
+    type: string
+    sql: ${TABLE}.{% parameter new_or_old_upc %} ;;
+  }
+
+  parameter: new_or_old_upc {
+    label: "Is it new or old UPC?"
+    type: unquoted
+    allowed_value: {
+      label: "New"
+      value: "new_upc"
+    }
+    allowed_value: {
+      label: "Old"
+      value: "old_upc"
+    }
+  }
+
+
+
+}
